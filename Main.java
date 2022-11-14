@@ -8,7 +8,7 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		//Challenge1 challenge1 = new Challenge1();
-		String stringOutput = Challenge1.retornar_string("Tipo A");
+		String stringOutput = Challenge1.return_string("Tipo A");
 		System.out.println("El array de salida es: " + stringOutput);
 		
 		
@@ -18,7 +18,7 @@ public class Main {
 		list.add("Pedro");
 		list.add("Camilo");
 		
-		boolean b = Challenge1.retornar_boolean("Juan", list);
+		boolean b = Challenge1.return_boolean("Juan", list);
 		System.out.println("El valor boolean de salida es: " + b);		
 
 	}
