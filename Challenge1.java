@@ -16,7 +16,7 @@ public class Challenge1 {
 	ii. Si el valor de entrada es igual a “Tipo B” la cadena de texto deberá iniciar en “08”
 	*/
 		
-	public static String retornar_string(String stringInput) {
+	public static String return_string(String stringInput) {
 		
 		String stringOutput = null ;
 		if(stringInput == "Tipo A") 
@@ -42,7 +42,7 @@ public class Challenge1 {
 		return stringOutput;	
 		}
 	
-	public static boolean retornar_boolean(String string, List<String> list)
+	public static boolean return_boolean(String string, List<String> list)
 	{
 		/* Crear un método que tenga como entrada un valor tipo String y una lista de 
 		 * cadena List<String>. El método devuelve un valor de tipo booleano. El
