@@ -1,0 +1,137 @@
+<br>
+<div class="container" style="width: 110%; margin: auto;">
+    <!--CARD CON EL LISTADO DE CUENTAS-->
+    <div class="card" style="width: 100%;">
+        <div class="card-header">
+            <h4 style="text-align: center;">CLIENTE: {{currentCustomer.firstName.toString()|uppercase}} {{currentCustomer.lastName.toString() | uppercase}} &nbsp; ID: {{currentCustomer.customerId}}</h4>
+        </div>
+        <div class="card-header">
+            <h3 style="text-align: center;">LISTADO DE CUENTAS</h3>
+        </div>
+        <div class="card-body">
+            <table class="table talbe-hover">
+                <thead>
+                    <tr style="font-size: 70%; text-align: center;">
+                        <th>ACCIONES</th>
+                        <th>CUENTA ID</th>
+                        <th>SALDO</th>
+                        <th>FECHA CREACIÓN</th>
+                        <th>NUM. CUENTA</th>
+                        <th>ESTADO</th>
+                        <th>TIPO</th>
+                        <th>ID CLIENTE</th>
+                        <th>EXENTA 4xMIL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let acc of accounts"  style="font-size: 70%; text-align: center;">
+                        <td>
+                            <div class="container">
+                                <button class="btn btn-danger" (click)="DeleteAccount(acc)" style="font-size: 75%;">Borrar</button>
+                                <button class="btn btn-secondary" (click)="ShowEditAccountForm(acc)" style="font-size: 75%;">Editar</button>
+                                <button class="btn btn-primary" (click)="GoToTransactions(acc)" style="font-size: 75%;">Movimientos</button>
+
+                            </div>
+                        </td>
+                        <td>{{acc.accountId}}</td>
+                        <td>{{acc.accountBalance}}</td>
+                        <td>{{acc.accountCreationDate}}</td>
+                        <td>{{acc.accountNumber}}</td>
+                        <td>{{acc.accountStatus}}</td>
+                        <td>{{acc.accountType}}</td>
+                        <td>{{acc.customerId}}</td>
+                        <td>{{acc.exemptOfGmf}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <br>
+        <div class="container" style="margin-left: 0cm;">
+            <button class="btn btn-secondary" (click)="ReturnToCustomersListing()" style="margin-left: 10px;">Lista de Clientes</button>
+            <button class="btn btn-secondary" (click)="ReturnHome()" style="margin-left: 10px;">Home</button>
+            <button class="btn btn-info" (click)="ShowNewAccountForm()" style="margin-left: 10px;">Nueva Cuenta</button>
+        </div>
+        <br>
+    </div>        
+</div>
+
+<br>
+
+<div class="container" style="width: 60%; margin: auto;">
+    <span *ngIf="cardForEditAccount">
+        <!--CARD CON EL FORMULARIO MODIFICACIÓN CUENTA-->
+        <div class="container">
+            <form action="">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="text-align: center;">MODIFICAR CUENTA</h3>
+                    </div>
+                    <div class="card-boddy" style="margin-left: 20px; margin-right: 20px;">
+                        <div>
+                            <br>
+                            <label for="">Estado de Cuenta &nbsp;</label>
+                            <br>
+                            <select name="accountStatus" id="accountStatus" class="form-control" [(ngModel)]="modifiedAccount.accountStatus">
+                                <option value="Activa">Activa</option>
+                                <option value="Bloqueada">Bloqueada</option>
+                            </select>
+                            <br>
+                            <label for="">Exenta del 4-mil &nbsp;</label>
+                            <br>
+                            <select name="exemptOfGmf" id="exemptOfGmf" class="form-control" [(ngModel)]="modifiedAccount.exemptOfGmf">
+                                <option [ngValue]=true>Exenta</option>
+                                <option [ngValue]=false>No Exenta</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="container">
+                        <button class="btn btn-primary" (click)="SaveEditAccount(modifiedAccount)" style="margin-left: 10px;">Guardar</button>
+                        <button class="btn btn-secondary" style="margin-left: 10px;">Cancelar</button>
+                        <br>
+                    </div>
+                    <br>
+                    {{modifiedAccount | json}}
+                </div>
+            </form>
+            <br>
+            
+        </div>
+    </span>
+</div>
+
+
+<div class="container">
+    <span *ngIf="cardForNewAccount">
+        <!--CARD CON EL FORMULARIO CREACION CUENTA-->
+        <div class="card">
+            <div class="card-header">
+                <h3 style="text-align: center;">REGISTRAR NUEVA CUENTA</h3>
+            </div>
+            <div class="card-body">
+                <form action="" class="column">
+                    <div class="column">
+                        <div class="form-group">
+                            <label for="">ID Cliente</label>
+                            <input type="text" disabled="true" name="idClient" class="form-control" [(ngModel)]="newAccount.customerId">
+                        </div>
+                        <div class="form-group" style="margin-top: 5px;">
+                            <label for="">Tipo de Cuenta</label><br>
+                            <select name="accountType" id="accountType" class="form-group" [(ngModel)]="newAccount.accountType">
+                                <option value="Ah">AHORROS</option>
+                                <option value="Co">CORRIENTE</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" (click)="SaveNewAccount(newAccount)" style="margin-top: 10px;">Guardar</button>
+                </form>
+            </div>
+            
+        </div>
+    </span>
+</div>
+
+<br>
+
+

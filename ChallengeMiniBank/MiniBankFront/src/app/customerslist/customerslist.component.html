@@ -1,0 +1,59 @@
+<br>
+<div class="container" style="width: 160%; margin-left: 0cm;">
+    <div class="card" style="width: 160%;">
+        <div class="card-header">
+            <h3 style="text-align: center;">CLIENTES</h3>
+        </div>
+        <div class="card-body">
+            <table class="table talbe-hover">
+                <thead>
+                    <tr style="font-size: 70%;">
+                        <th>ACCIONES</th>
+                        <th>ID</th>
+                        <th>TIPO DOC.</th>
+                        <th>NUM. DOC.</th>
+                        <th>NOMBRES</th>
+                        <th>APELLIDOS</th>
+                        <th>CORREO</th>
+                        <th>FECHA NACIMIENTO</th>
+                        <th>TELEFONO</th>
+                        <th>FECHA CREACIÓN</th>
+                        <th>FECHA MODIFICACIÓN</th>
+                        <th>MODIFICADOR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let cust of customers"  style="font-size: 70%;">
+                        <td>
+                            <div class="container">
+                                <button class="btn btn-danger" (click)="DeleteCustomer(cust)" style="font-size: 75%;">Borrar</button>
+                                <button class="btn btn-secondary" (click)="GoToModifiyCustomer(cust)" style="font-size: 75%;">Editar</button>
+                                <button class="btn btn-primary" (click)="GoToManageAccounts(cust)" style="font-size: 75%;">Productos</button>
+
+                            </div>
+                        </td>
+                        <td>{{cust.customerId}}</td>
+                        <td>{{cust.identificationType}}</td>
+                        <td>{{cust.identificationNumber}}</td>
+                        <td>{{cust.firstName}}</td>
+                        <td>{{cust.lastName}}</td>
+                        <td>{{cust.email}}</td>
+                        <td>{{cust.birthDate |date:"dd/MM/yyyy"}}</td>
+                        <td>{{cust.phoneNumber}}</td>
+                        <td>{{cust.creationDate|date:"d/M/yyyy, H:mm:ss"}}</td>
+                        <td>{{cust.modificationDate|date:"d/M/yyyy, H:mm:ss"}}</td>
+                        <td>{{cust.userModificator}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="container" style="margin-left: 0cm;">
+            <button (click)="NewCustomer()" class="btn btn-info" style="margin-left: 10px;">Registrar Nuevo Cliente</button>
+            <button (click)="ReturnHome()" class="btn btn-secondary" style="margin-left: 10px;">Volver al Home</button>
+        </div>
+        <br><br>
+
+    </div>
+</div>
