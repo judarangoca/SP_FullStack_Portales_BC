@@ -23,23 +23,37 @@ import com.sophos.MiniBankV1.services.TransactionService;
 @RequestMapping("/transactions")
 public class TransactionController {
 	
-	private static final HttpStatus ResponseEntity = null;
 	@Autowired
 	TransactionService transactionService; 
 	
 	@PostMapping("/deposit") 
-	public ResponseEntity<Transaction> depositTransaction(@RequestBody Transaction transaction){
-		return new ResponseEntity<>(transactionService.Deposit(transaction), HttpStatus.CREATED);
+	public ResponseEntity<Object> depositTransaction(@RequestBody Transaction transaction){
+		try {
+			return new ResponseEntity<>(transactionService.Deposit(transaction), HttpStatus.CREATED);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+		
+		
 	}
 	
 	@PostMapping("/transfer")
-	public ResponseEntity<Transaction> transferTransaction(@RequestBody Transaction transaction){
-		return new ResponseEntity<>(transactionService.Transfer(transaction), HttpStatus.CREATED);
+	public ResponseEntity<Object> transferTransaction(@RequestBody Transaction transaction){
+		try {
+			return new ResponseEntity<Object>(transactionService.Transfer(transaction), HttpStatus.CREATED);}
+		catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}		
 	}
 	
 	@PostMapping("/withdraw")
-	public ResponseEntity<Transaction> withdrawTransaction(@RequestBody Transaction transaction){
-		return new ResponseEntity<>(transactionService.Withdraw(transaction), HttpStatus.CREATED);
+	public ResponseEntity<?> withdrawTransaction(@RequestBody Transaction transaction){
+		try {
+			return new ResponseEntity<Transaction>(transactionService.Withdraw(transaction), HttpStatus.CREATED);}
+		catch (Exception e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+			
 	}
 	
 	@GetMapping(path = "/accountId{accountId}")

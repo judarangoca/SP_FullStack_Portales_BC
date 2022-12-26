@@ -26,7 +26,7 @@ public class Customer {
 	private String phoneNumber;
 	private LocalDateTime creationDate;
 	private LocalDateTime modificationDate ;
-	private String userModificator = "admin"; //Id del usuario que realiza la modificación
+	private String userModificator; //usuario que realiza la modificación
 	
 	//Generamos constructor por defecto
 	public Customer() {

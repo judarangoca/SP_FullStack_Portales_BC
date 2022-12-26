@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,21 +29,34 @@ public class CustomerServiceImplementation implements CustomerService{
 	AccountRepository accountRepository;
 	
 	@Override
-	public Optional<Customer> createCustomer(Customer customer){
+	public Customer createCustomer(Customer customer){
 		
 		LocalDateTime birthDate = customer.getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 		LocalDateTime nowDate = LocalDateTime.now();
 		long yearsPeriod = birthDate.until(nowDate, ChronoUnit.YEARS);
 		
-		Optional<Customer> opt;
-		if (yearsPeriod > 18) {
-			opt = Optional.of(customerRepository.save(customer));}
-		else {			
-			opt = Optional.empty();
-			throw new RejectedExecutionException("El cliente registrado es menor de edad");}
-		return opt;
+		customer.setCreationDate(nowDate);
+		customer.setModificationDate(nowDate);
+		customer.setUserModificator("admin");
+		
+		if (yearsPeriod < 18) {
+			throw new RejectedExecutionException("Not possible to register an under-age customer");}
+		
+		//Pattern para la validación del campo email
+		Pattern pattern = Pattern
+                .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+        if (!pattern.matcher(customer.getEmail()).matches()) {
+			throw new RejectedExecutionException("email fiel invalid");}
+        
+        if(customer.getFirstName().length()<=2 || customer.getLastName().length()<=2) {
+        	throw new RejectedExecutionException("Name field or LastName-field invalid");
+        }
+
+		return customerRepository.save(customer);
 		}
 
+	
 	@Override
 	public List<Customer> getAllCustomers() {
 		// TODO Auto-generated method stub
@@ -58,13 +72,13 @@ public class CustomerServiceImplementation implements CustomerService{
 	@Override
 	public boolean deleteCustomerById(int id) {
 		
-		//Verificamos que el cliente no tenga ninguna cuenta en estado bloqueada!
+		//Verificamos que el cliente no tenga ninguna cuenta en estado cancelada!
 		ArrayList<Account> accounts = accountRepository.findByCustomerID(Integer.toString(id));
 		boolean b = true;
 		for (Account acc : accounts) {
-			if( acc.getAccountStatus().equals("Bloqueada")) {
+			if(acc.getAccountStatus().equals("Canceled")) {
 				b=!b;
-				throw new RejectedExecutionException("El usuario tiene una de sus cuentas bloqueadas");}
+				throw new RejectedExecutionException("The customer owns an account in status canceled");}
 		};
 		
 		if(b){

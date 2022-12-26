@@ -61,13 +61,23 @@ public class AccountController {
 	}
 	
 	@PostMapping //Controlamos el servicio createAccount
-	public ResponseEntity<Account> createAccount(@RequestBody Account account){
-		return new ResponseEntity<>(accountService.CreateAccount(account), HttpStatus.CREATED);
+	public ResponseEntity<?> createAccount(@RequestBody Account account){
+		
+		try {
+			return new ResponseEntity<Account>(accountService.CreateAccount(account), HttpStatus.CREATED);
+
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());}		
 	}
 	
-	@PutMapping("/accountId{accountId}") //Controlamos el servicio UpdateAccountStatusById
-	public ResponseEntity<Account> ModifiyAccount(@PathVariable("accountId") int accountId, @RequestBody Account account){
-		return new ResponseEntity<Account>(accountService.EditAccount(account), HttpStatus.OK);	
+	@PutMapping("/accountId{accountId}")
+	public ResponseEntity<?> ModifiyAccount(@PathVariable("accountId") int accountId, @RequestBody Account account){
+		account.setAccountId(accountId);
+		try {
+			return new ResponseEntity<Account>(accountService.EditAccount(account), HttpStatus.OK);	
+		} catch (Exception e) {
+			return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	

@@ -42,15 +42,13 @@ public class CustomerController{
 	
 	
 	@PostMapping //Controlamos el servicio createCustomer
-	public ResponseEntity<Optional<Customer>> createCustomer(@RequestBody Customer customer){
+	public ResponseEntity<?> createCustomer(@RequestBody Customer customer){
 		
-		Optional<Customer> customerCreated = customerService.createCustomer(customer);
-		if (customerCreated.isPresent()){
-			return new ResponseEntity<Optional<Customer>>(customerCreated,HttpStatus.OK);
-		}
-		else {
-			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
-		}
+		try {
+			Customer customerCreated = customerService.createCustomer(customer);
+			return new ResponseEntity<Customer>(customerCreated,HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());}
 	}
 	
 	

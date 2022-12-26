@@ -8,7 +8,7 @@ import com.sophos.MiniBankV1.entities.Customer;
 public interface CustomerService {
 	
 	//El servicio deberá crear un cliente que proviene del front
-	public Optional<Customer> createCustomer(Customer customer);
+	public Customer createCustomer(Customer customer);
 	
 	//El servicio deberá listar todos los clientes para mostrarlos en el front
 	public List<Customer> getAllCustomers();

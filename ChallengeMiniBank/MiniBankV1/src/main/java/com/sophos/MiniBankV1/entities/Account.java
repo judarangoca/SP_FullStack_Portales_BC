@@ -17,13 +17,18 @@ public class Account {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int accountId ;
 	
-	private String accountNumber;
-	private int customerId ; 
+	private int customerId ;
 	private String accountType;
+	private String accountNumber;
 	private String accountStatus;
-	private boolean exemptOfGmf;
-	private LocalDateTime accountCreationDate = LocalDateTime.now();
 	private float accountBalance;
+	private float accountCurrentBalance;
+	private boolean exemptOfGmf;
+	private LocalDateTime accountCreationDate; // = LocalDateTime.now();
+	private String creationUser;
+	private LocalDateTime modificationDate;
+	private String modificationUser;
+	
 	
 	public int getAccountId() {
 		return accountId;
@@ -73,6 +78,30 @@ public class Account {
 	}
 	public void setExemptOfGmf(boolean exemptOfGmf) {
 		this.exemptOfGmf = exemptOfGmf;
+	}
+	public String getModificationUser() {
+		return modificationUser;
+	}
+	public void setModificationUser(String modificationUser) {
+		this.modificationUser = modificationUser;
+	}
+	public LocalDateTime getModificationDate() {
+		return modificationDate;
+	}
+	public void setModificationDate(LocalDateTime modificationDate) {
+		this.modificationDate = modificationDate;
+	}
+	public String getCreationUser() {
+		return creationUser;
+	}
+	public void setCreationUser(String creationUser) {
+		this.creationUser = creationUser;
+	}
+	public float getAccountCurrentBalance() {
+		return accountCurrentBalance;
+	}
+	public void setAccountCurrentBalance(float d) {
+		this.accountCurrentBalance = d;
 	}
 
 	
