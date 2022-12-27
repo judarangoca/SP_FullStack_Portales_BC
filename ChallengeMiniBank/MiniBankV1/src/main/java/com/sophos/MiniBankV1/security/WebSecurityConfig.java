@@ -16,47 +16,47 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class WebSecurityConfig {
 	
-	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
-			
-		return http
-				.csrf().disable()
-				.authorizeRequests() //ver minuto 13:00 https://www.youtube.com/watch?v=ckNz6ITf16E
-				.anyRequest().authenticated()
-				.and()
-				.httpBasic()
-				.and()
-				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
-				.build();
-		}
-	
-	@Bean
-	UserDetailsService userDetailsService() {
+//	@Bean
+//	SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
+//			
+//		return http
+//				.csrf().disable()
+//				.authorizeRequests() //ver minuto 13:00 https://www.youtube.com/watch?v=ckNz6ITf16E
+//				.anyRequest().authenticated()
+//				.and()
+//				.httpBasic()
+//				.and()
+//				.sessionManagement()
+//				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//				.and()
+//				.build();
+//		}
+//	
+//	@Bean
+//	UserDetailsService userDetailsService() {
+//		
+//		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(); //Podria cambiar el InMemory por una BD
+//		manager.createUser(User.withUsername("admin")
+//			.password(passwordEncoder().encode("admin"))
+//			.roles()
+//			.build());
+//		
+//		return manager;
 		
-		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(); //Podria cambiar el InMemory por una BD
-		manager.createUser(User.withUsername("admin")
-			.password(passwordEncoder().encode("admin"))
-			.roles()
-			.build());
-		
-		return manager;
-		
-	}
-	
-	@Bean
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder(); //it could be used anoted crypting implementation
-	}
-	
-	@Bean
-	AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
-		return http.getSharedObject(AuthenticationManagerBuilder.class)
-				.userDetailsService(userDetailsService())
-				.passwordEncoder(passwordEncoder())
-				.and()
-				.build();
-	}
+//	}
+//	
+//	@Bean
+//	PasswordEncoder passwordEncoder() {
+//		return new BCryptPasswordEncoder(); //it could be used anoted crypting implementation
+//	}
+//	
+//	@Bean
+//	AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
+//		return http.getSharedObject(AuthenticationManagerBuilder.class)
+//				.userDetailsService(userDetailsService())
+//				.passwordEncoder(passwordEncoder())
+//				.and()
+//				.build();
+//	}
 
 }
