@@ -1,0 +1,75 @@
+*{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    box-sizing: border-box;
+}
+
+h2 {
+    text-align: center;
+    color: navy
+}
+
+h3 {
+    text-align: center;
+    color: rgba(1, 1, 25, 0.556);
+    text-decoration-line: underline;
+}
+
+section#hero{
+    background-color: rgb(253, 253, 253);
+    margin: 2;
+    padding: 2;
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid grey;
+}
+
+section#hero h1{
+    font-size: 2rem;
+}
+
+section#hero p{
+    font-size: 1rem;
+    padding: 20px;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+section#interest{
+    border: 2px solid grey;
+}
+
+.interest-list{
+    display: flex;
+    justify-content: center;
+}
+
+.interest-list h3{
+    text-align: center;
+}
+
+.interest-detail{
+    width: 300px;
+    margin: 30px;
+}
+.interest-detail img{
+    width: 100%;
+    height: 75%;
+}
+
+.myul{
+    display: inline-block;
+    text-align: left;
+}
+
+section#contact{
+    border: 2px solid grey;
+    text-align: center;
+}
+
+section#formation{
+    border: 2px solid grey;
+    text-align: center;
+}
+

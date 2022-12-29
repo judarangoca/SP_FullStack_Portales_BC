@@ -1,13 +1,17 @@
 export class Account{
 
     accountId:number;
-    accountNumber:String;
-	customerId:number;
+    customerId:number;
     accountType:String;
+    accountNumber:String;
     accountStatus:String;
-	exemptOfGmf:boolean=false;
+    accountBalance:number;
+    accountCurrentBalance:number;
+	exemptOfGmf:boolean;
 	accountCreationDate:Date;
-	accountBalance:number;
+    creationUser:String;
+    modificationDate:Date;
+    modificationUser:String;
 
     constructor(){};
 

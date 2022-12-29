@@ -25,18 +25,18 @@ export class CustomerslistComponent implements OnInit{
   }
 
   DeleteCustomer(customer:Customer){
-    if(confirm('¿Desea eliminar el cliente?')){
+    if(confirm('Delete this customer?')){
     this.service.deleteCustomer(customer)
     .pipe(catchError(err=>{
       alert(err['error']);
       return throwError('')}))
     .subscribe(data=>{
       this.customers=this.customers.filter(p=>p!==customer);
-      alert("Usuario Eliminado")})}
+      alert("Customer deleted succesfully")})}
   };
 
   ReturnHome(){
-    this.router.navigate([""]);
+    this.router.navigate([""]) ;
   }
 
   GoToModifiyCustomer(customer:Customer):void{

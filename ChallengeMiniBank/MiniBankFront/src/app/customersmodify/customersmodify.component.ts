@@ -23,11 +23,11 @@ export class CustomersmodifyComponent implements OnInit{
   };
 
   UpdateCustomer(customer:Customer){
-    if(confirm('¿Desea guardar los cambios realizados?')){
+    if(confirm('Update customer information?')){
     this.service.updateCustomer(customer).
     subscribe(data=>{
       this.customer=data;
-      alert("Se actualizo el cliente correctamente ...");
+      alert("Customer Updated Correctly ...");
     });
     this.router.navigate(['customerslist']).then(()=>{window.location.reload()});
     }

@@ -1,3 +1,4 @@
+<app-menu></app-menu>
 <br>
 <div class="container col-md-6" style="font-size: 90%;">
     <div class="card">
@@ -7,40 +8,40 @@
         <div class="card-body">
             <form action="" class="column">
                 <div>
-                    <div class="form-group">
-                        <label for="">Tipo ID &nbsp;</label>
-                        <select name="identificationType" id="identificationType" class="form-group" [(ngModel)]="customer.identificationType">
+                    <div class="form-control">
+                        <label for="">ID Type &nbsp;</label>
+                        <select name="identificationType" id="identificationType" class="form-control" [(ngModel)]="customer.identificationType">
                             <option value="CC">CC</option>
                             <option value="CE">CE</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="">Identificación</label>
+                        <label for="">Identification Number</label>
                         <input type="number" name="identification" class="form-control" [(ngModel)]="customer.identificationNumber">
                     </div>
                     <div class="form-group">
-                        <label for="">Nombres</label>
+                        <label for="">First Names</label>
                         <input type="text" name="firstname" class="form-control" [(ngModel)]="customer.firstName">
                     </div>
                     <div class="form-group">
-                        <label for="">Apellidos</label>
+                        <label for="">Second Names</label>
                         <input type="text" name="lastname" class="form-control" [(ngModel)]="customer.lastName">
                     </div>
                     <div class="form-group">
-                        <label for="">Correo Electrónico</label>
+                        <label for="">E-mail</label>
                         <input type="email" name="email" class="form-control" [(ngModel)]="customer.email">
                     </div>
                     <div class="form-group">
-                        <label for="">Fecha Nacimiento</label>
+                        <label for="">Birthdate</label>
                         <input type="date" name="birthdate" class="form-control" [(ngModel)]="customer.birthDate">
                     </div>
                     <div class="form-group">
-                        <label for="">Telefono</label>
+                        <label for="">Phone Number</label>
                         <input type="tel" name="phone" class="form-control" [(ngModel)]="customer.phoneNumber">
                     </div>
                 </div>
-                <button (click)="UpdateCustomer(customer)" class="btn btn-warning" style="margin-top: 10px;">Editar</button>
-                <button (click)="ReturnToCustomersListing()" class="btn btn-secondary" style="margin-left: 10px; margin-top: 10px;">Volver</button>
+                <button (click)="UpdateCustomer(customer)" class="btn btn-warning" style="margin-top: 10px;">Edit</button>
+                <button (click)="ReturnToCustomersListing()" class="btn btn-secondary" style="margin-left: 10px; margin-top: 10px;">Return</button>
 
             </form>
 

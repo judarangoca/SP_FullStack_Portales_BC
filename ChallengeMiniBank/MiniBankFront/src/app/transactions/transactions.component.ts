@@ -1,6 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Account } from '../model/Account';
 import { Transaction } from '../model/Transaction';
 import { AccountsserviceService } from '../services/accountsservice.service';
@@ -52,7 +53,8 @@ export class TransactionsComponent implements OnInit {
 
   cardForNewTransaction=false;
   GenerateNewTransaction(){
-    this.accountService.getAllAccounts().subscribe(data=>this.accounts = data);
+    this.accountService.getAllAccounts().
+    subscribe(data=>this.accounts = data.filter(x=>{ return x.accountId != this.currentAccountId}));
     this.cardForNewTransaction=true;
   };
 
@@ -62,7 +64,7 @@ export class TransactionsComponent implements OnInit {
     this.newTransaction.transactionValue = this.formNewTransaction.value.transaccionValue;
     this.newTransaction.transactionDate = new Date();
 
-      if(confirm("¿Esta seguro de generar el movimiento?")) {
+      if(confirm("¿Save the Transaction?")) {
         switch(this.formNewTransaction.value.typeOfTransaction){
         case "Deposit":
           this.formNewTransaction.get('destinationAccountId').addValidators(Validators.required)
@@ -70,8 +72,9 @@ export class TransactionsComponent implements OnInit {
           this.newTransaction.originAccountId = null;
 
           this.service.createNewDeposit(this.newTransaction).
+          pipe(catchError(e=>{alert(e['error']); throw new Error(e['error'])})).
           subscribe(data=>{
-            alert(`Deposito Exitoso`);
+            alert(`Deposit Success`);
             this.myFunc();
             this.newTransaction = new Transaction();
             this.router.navigate(['transactions']).then(()=>{window.location.reload()});
@@ -84,8 +87,9 @@ export class TransactionsComponent implements OnInit {
           this.newTransaction.originAccountId = this.formNewTransaction.value.originAccountId;
           
           this.service.createNewWithdraw(this.newTransaction).
+          pipe(catchError(e=>{alert(e['error']); throw new Error(e['error']); })).
           subscribe(data=>{
-            alert(`Retiro Exitoso`);
+            alert(`Withdraw Success`);
             this.myFunc();
             this.newTransaction = new Transaction();
             this.router.navigate(['transactions']).then(()=>{window.location.reload()});
@@ -97,8 +101,9 @@ export class TransactionsComponent implements OnInit {
           this.newTransaction.originAccountId = this.formNewTransaction.value.originAccountId;
 
           this.service.createNewTransfer(this.newTransaction).
+          pipe(catchError(e=>{alert(e['error']); throw new Error(e['error'])})).
           subscribe(data=>{
-            alert(`Transferencia Existosa`);
+            alert(`Transfer Success`);
             this.myFunc();
             this.newTransaction = new Transaction();
             this.router.navigate(['transactions']).then(()=>{window.location.reload()});
@@ -121,6 +126,13 @@ export class TransactionsComponent implements OnInit {
 
   ReturnAccounts(){
     this.router.navigate(['accounts'])
+  }
+
+  CancelNewTransacion(){
+
+    this.newTransaction = new Transaction();
+    this.cardForNewTransaction=false;
+    this.myFunc();
   }
 
 }

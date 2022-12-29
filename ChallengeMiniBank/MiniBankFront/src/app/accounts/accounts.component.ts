@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 import { Account } from '../model/Account';
 import { Customer } from '../model/Customer';
 import { AccountsserviceService } from '../services/accountsservice.service';
 import { CustomersserviceService } from '../services/customersservice.service';
+import { TokenServiceService } from '../services/token-service.service';
 
 @Component({
   selector: 'app-accounts',
@@ -20,21 +22,29 @@ export class AccountsComponent implements OnInit {
   cardForEditAccount:boolean=false;
   currentCustomer:Customer = new Customer(null,'','','','','',null,'',null,null,'')
   
+  isAdmin = false;
 
-  constructor(private router:Router, private service:AccountsserviceService, private customerService:CustomersserviceService){};
+  constructor(
+    private router:Router,
+    private service:AccountsserviceService,
+    private customerService:CustomersserviceService,
+    private tokenService:TokenServiceService){};
   
   ngOnInit(): void {
     this.ListingAccountsByCustomerId();
   }
 
   ListingAccountsByCustomerId(){
+
+    this.tokenService.getAuthorities().forEach(element => {
+      if(element['authority']=="ROLE_ADMIN"){this.isAdmin=true}})
+
     let customerId=localStorage.getItem("customerId");
     //Obtenemos el clienteActual
-   
     this.customerService.getCustomerById(+customerId).pipe().
     subscribe(data=>this.currentCustomer=data);
 
-    this.service.getAccountsByCustomerId(+customerId).
+    this.service.getAccountsByCustomerId(+customerId).pipe().
     subscribe(data=>{this.accounts=data});
   }
 
@@ -48,7 +58,7 @@ export class AccountsComponent implements OnInit {
   SaveNewAccount(account:Account){
     this.service.createNewAccount(account)
     .subscribe(data=>{
-      alert("Cuenta Agregada con Exito");
+      alert("Account Created Correctly");
       this.router.navigate(['accounts']).then(()=>{
         window.location.reload();
       });
@@ -64,23 +74,28 @@ export class AccountsComponent implements OnInit {
 
   SaveEditAccount(account:Account){
     this.service.ModifyAccount(account).
-    subscribe(data=>{alert("Se modificó la cuenta correctamente")});
-    this.modifiedAccount=new Account();
-    this.router.navigate(['accounts']).then(()=>{
-      window.location.reload()});
+    pipe(catchError(err=>{
+      alert(err['error']);
+      // this.modifiedAccount=new Account();
+      // this.router.navigate(['accounts']).then(()=>{window.location.reload()});
+      return throwError(err['error']);})).
+    subscribe(data=>{ 
+      alert("Account modified corectly");
+      this.modifiedAccount=new Account();
+      this.router.navigate(['accounts']).then(()=>{
+        window.location.reload()});});
   }
 
   DeleteAccount(account:Account){
-    if(confirm('¿Desea Eliminar la Cuenta?')){
-      this.service.deleteAccountByAccountId(account)
-      .subscribe(data=>{
-        this.accounts=this.accounts.filter(acc=>acc!==account)
+    if(confirm('Delete This Account?')){
+      this.service.deleteAccountByAccountId(account).
+      pipe(catchError(err=>{throw new Error(err['error'])})).
+      subscribe(data=>{
+        this.accounts=this.accounts.filter(acc=>acc!==account);
+        alert("Account deleted correctly");
+        this.router.navigate(['accounts']).then(()=>{
+        window.location.reload()});
       });
-      
-      alert("Cuenta eliminada");
-
-      this.router.navigate(['accounts']).then(()=>{
-      window.location.reload()});
     }
   };
 

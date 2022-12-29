@@ -17,6 +17,11 @@ import { AccountsComponent } from './accounts/accounts.component';
 import { AccountsserviceService } from './services/accountsservice.service';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { TransactionsserviceService } from './services/transactionsservice.service';
+import { ContactComponent } from './contact/contact/contact.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { MenuComponent } from './menu/menu.component';
+import { interceptorProvider, TokenInterceptorService } from './interceptors/token-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +33,11 @@ import { TransactionsserviceService } from './services/transactionsservice.servi
     CustomersmodifyComponent,
     UserslistComponent,
     AccountsComponent,
-    TransactionsComponent
+    TransactionsComponent,
+    ContactComponent,
+    LoginComponent,
+    RegisterComponent,
+    MenuComponent
   ],
   
   imports: [
@@ -43,6 +52,7 @@ import { TransactionsserviceService } from './services/transactionsservice.servi
     CustomersserviceService,
     AccountsserviceService,
     TransactionsserviceService,
+    interceptorProvider
   ],
   bootstrap: [AppComponent]
 })

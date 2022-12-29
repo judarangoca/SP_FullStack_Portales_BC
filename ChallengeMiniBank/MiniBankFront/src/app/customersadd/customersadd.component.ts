@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 import { Customer } from '../model/Customer';
 import { CustomersserviceService } from '../services/customersservice.service';
 
@@ -41,11 +42,18 @@ export class CustomersaddComponent implements OnInit {
       this.modifcationDate,
       this.userModificator);
     
-    if(confirm('¿Desear registrar el nuevo cliente?')){
+    if(confirm('Save the new customer?')){
     this.service.createNewCustomer(cust)
-    .subscribe(data=>{alert("Agregado con exito...");
+    .pipe(catchError(error=>{
+      alert(error['error']); 
+      return throwError('')}))
+    .subscribe(data=>{alert("Customer added succesfuly...");
     this.router.navigate(["customerslist"]);});
     }
   };
+
+  ReturnCustomerListing(){
+    this.router.navigate(["customerslist"]).then(()=>{window.location.reload()});
+  }
 
 }
