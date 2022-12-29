@@ -3,9 +3,12 @@ package com.sophos.MiniBankV1.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +16,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sophos.MiniBankV1.entities.Account;
 import com.sophos.MiniBankV1.entities.Customer;
+import com.sophos.MiniBankV1.security.jwt.JwtProvider;
 import com.sophos.MiniBankV1.services.AccountService;
 import com.sophos.MiniBankV1.services.CustomerService;
 
@@ -29,6 +34,8 @@ public class AccountController {
 	
 	@Autowired
 	AccountService accountService;
+	@Autowired
+	JwtProvider jwtProvider;
 	
 	@GetMapping("/")
 	public ResponseEntity<List<Account>> getAccounts(){
@@ -61,8 +68,14 @@ public class AccountController {
 	}
 	
 	@PostMapping //Controlamos el servicio createAccount
-	public ResponseEntity<?> createAccount(@RequestBody Account account){
+	public ResponseEntity<?> createAccount(@RequestBody Account account,
+			@Valid @RequestHeader("Authorization") String token){
 		
+		if(token != null || !token.isBlank()) {
+			String username = jwtProvider.getUsernameFromToken(token); 
+			account.setModificationUser(username);
+			account.setCreationUser(username);}	
+
 		try {
 			return new ResponseEntity<Account>(accountService.CreateAccount(account), HttpStatus.CREATED);
 
@@ -71,8 +84,14 @@ public class AccountController {
 	}
 	
 	@PutMapping("/accountId{accountId}")
-	public ResponseEntity<?> ModifiyAccount(@PathVariable("accountId") int accountId, @RequestBody Account account){
-		account.setAccountId(accountId);
+	public ResponseEntity<?> ModifiyAccount(@PathVariable("accountId") int accountId, 
+			@RequestBody Account account,@Valid @RequestHeader("Authorization") String token){
+		
+		if(token != null || !token.isBlank()) {
+			String username = jwtProvider.getUsernameFromToken(token); 
+			account.setModificationUser(username);
+			account.setCreationUser(username);}	
+
 		try {
 			return new ResponseEntity<Account>(accountService.EditAccount(account), HttpStatus.OK);	
 		} catch (Exception e) {
@@ -80,7 +99,7 @@ public class AccountController {
 		}
 	}
 	
-	
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/accountId{accountId}")
 	public ResponseEntity<Object> DeleteAccount(@PathVariable("accountId") int accountId){
 		if (accountService.DeleteAccountByAccountId(accountId)) {

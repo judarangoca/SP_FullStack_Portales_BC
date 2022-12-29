@@ -1,6 +1,7 @@
 package com.sophos.MiniBankV1.security.controller;
 
 import java.awt.PageAttributes.MediaType;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -13,6 +14,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -61,10 +63,11 @@ public class AuthController {
 	@Autowired
 	JwtProvider jwtProvider;
 	
+	@PreAuthorize("hasRole('ADMIN')") //with this injection, only Users with admin role could create newuser
 	@PostMapping("/newUser")
 	public ResponseEntity<?> newUser (@Valid @RequestBody NewUser newUser,
 			BindingResult bindingResult) throws Exception{ //BindingResult allow us to validate the newUser JSON Object
-		
+
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>("invalid new user fields",HttpStatus.BAD_REQUEST);}
 		
@@ -96,7 +99,11 @@ public class AuthController {
 		
 		userServiceImplementation.save(user);
 		
-	 return new ResponseEntity<>("User saved",HttpStatus.CREATED);
+		HashMap<String, String> response = new HashMap<>();
+		response.put("message","User saved correctly");
+
+		return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+	
 	}
 	
 	

@@ -37,12 +37,12 @@ public class CustomerServiceImplementation implements CustomerService{
 		
 		customer.setCreationDate(nowDate);
 		customer.setModificationDate(nowDate);
-		customer.setUserModificator("admin");
+		if(customer.getUserModificator() == null) {customer.setUserModificator("admin");}
 		
 		if (yearsPeriod < 18) {
 			throw new RejectedExecutionException("Not possible to register an under-age customer");}
 		
-		//Pattern para la validación del campo email
+		//Pattern email filed validation
 		Pattern pattern = Pattern
                 .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                         + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
@@ -95,8 +95,14 @@ public class CustomerServiceImplementation implements CustomerService{
 	@Override
 	public Customer modifyCustomer(Customer customer) {
 		customer.setModificationDate(LocalDateTime.now());
+		
+		if(customer.getUserModificator()==null || customer.getUserModificator().isBlank()) {
+			customer.setUserModificator("admin");
+		}
+		
 		customerRepository.save(customer);
-		return null;
+		
+		return customer;
 	}
 
 }

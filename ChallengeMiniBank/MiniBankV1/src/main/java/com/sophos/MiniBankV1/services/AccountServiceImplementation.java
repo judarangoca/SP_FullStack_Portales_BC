@@ -10,6 +10,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Service;
 
 import com.sophos.MiniBankV1.entities.Account;
@@ -72,8 +73,13 @@ public class AccountServiceImplementation implements AccountService{
 	
 		account.setAccountNumber(newAccountNumber);
 		account.setAccountStatus("Activa");
-		account.setCreationUser("admin");
-		account.setModificationUser("admin");
+		
+		if(account.getModificationUser()==null || account.getModificationUser().isBlank()) {
+			account.setModificationUser("admin");
+		}
+		if(account.getCreationUser()==null || account.getCreationUser().isBlank()) {
+			account.setCreationUser("admin");
+		}
 		account.setModificationDate(LocalDateTime.now());
 		account.setAccountCreationDate(LocalDateTime.now());
 		account.setAccountBalance(0);
@@ -118,7 +124,9 @@ public class AccountServiceImplementation implements AccountService{
 		};
 		
 		account.setModificationDate(LocalDateTime.now());
-		account.setModificationUser("admin");
+		if(account.getModificationUser()==null || account.getModificationUser().isBlank()) {
+			account.setModificationUser("admin");
+		}
 		return accountRepository.save(account);
 	}
 	
@@ -129,14 +137,22 @@ public class AccountServiceImplementation implements AccountService{
 	@Override
 	public boolean DeleteAccountByAccountId(int accountId){
 
-		Optional<Account> account = accountRepository.findById(accountId);
-		if (account.isPresent()) {
-			accountRepository.deleteById(accountId);
-			return true;
+		Optional<Account> optionalAccount = accountRepository.findById(accountId);
+		
+		if (optionalAccount.isEmpty()) {
+			throw new NoSuchElementException("The account with Id %s is not found".formatted(accountId));
+		}
+		
+		Account account = optionalAccount.get();
+		
+		if (!(account.getAccountStatus().equalsIgnoreCase("canceled"))) {
+			
+			throw new RequestRejectedException(
+					"Account with accound Id %s is not in canceled status".formatted(account.getAccountId()));
 		}
 		else{
-			return false;}
-
+			accountRepository.deleteById(accountId);
+			return true;}
 		}
 
 	@Override

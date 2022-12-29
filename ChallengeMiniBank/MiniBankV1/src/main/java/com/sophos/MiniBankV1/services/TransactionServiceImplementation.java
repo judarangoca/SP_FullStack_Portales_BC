@@ -7,13 +7,20 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.RejectedExecutionException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.sophos.MiniBankV1.entities.Account;
 import com.sophos.MiniBankV1.entities.Transaction;
 import com.sophos.MiniBankV1.repository.AccountRepository;
 import com.sophos.MiniBankV1.repository.TransactionRepository;
+import com.sophos.MiniBankV1.security.jwt.JwtProvider;
 
 @Service
 public class TransactionServiceImplementation implements TransactionService{
@@ -23,6 +30,17 @@ public class TransactionServiceImplementation implements TransactionService{
 	
 	@Autowired
 	AccountRepository accountRepository;
+	
+	@Autowired
+	JwtProvider jwtProvider;
+	
+	public String getCurrentUserModificator() {
+		//Getting the Header from current request
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest currentRequest = attributes.getRequest();
+		String token = currentRequest.getHeader("Authorization");
+		return jwtProvider.getUsernameFromToken(token);
+	}
 
 	@Override
 	public Transaction Deposit(Transaction transaction) {
@@ -55,10 +73,14 @@ public class TransactionServiceImplementation implements TransactionService{
 			destAcc.setAccountCurrentBalance( (float)(destAcc.getAccountBalance()-0.004*destAcc.getAccountBalance()) );}
 		else {
 			destAcc.setAccountCurrentBalance( destAcc.getAccountBalance() );};
+			
 
 		//Updating modifications in account
 		destAcc.setModificationDate(LocalDateTime.now());
-		destAcc.setModificationUser("admin");
+		
+		String currentUsername = getCurrentUserModificator();
+		if (currentUsername!=null) {destAcc.setModificationUser(currentUsername);}else {destAcc.setModificationUser("admin");};
+		
 		accountRepository.save(destAcc);
 		
 		//Updating modifications in transaction
@@ -115,7 +137,9 @@ public class TransactionServiceImplementation implements TransactionService{
 				
 		//Updating the modifications into account
 		origAcc.setModificationDate(LocalDateTime.now());
-		origAcc.setModificationUser("admin");
+		
+		String currentUsername = getCurrentUserModificator();
+		if (currentUsername!=null) {origAcc.setModificationUser(currentUsername);}else {origAcc.setModificationUser("admin");};
 		accountRepository.save(origAcc);
 
 		//Updating the transaction
@@ -163,6 +187,9 @@ public class TransactionServiceImplementation implements TransactionService{
 		else if(  (origAcc.getAccountBalance() - value < 0) && (origAcc.getAccountType().equalsIgnoreCase("Ah")) ){
 			throw new RejectedExecutionException("Insufficient funds for saving account");}
 
+		//Get the current user logged
+		String currentUsername = getCurrentUserModificator();
+		
 		//Actualizamos el balance de la cuenta de origen
 		origAcc.setAccountBalance(origAcc.getAccountBalance() - value);
 		//Actualizamos el saldo corriente de la cuenta de origen
@@ -172,7 +199,7 @@ public class TransactionServiceImplementation implements TransactionService{
 			origAcc.setAccountCurrentBalance( origAcc.getAccountBalance() );};
 		//Actualizamos las modificaciones en la cuenta de origen
 		origAcc.setModificationDate(LocalDateTime.now());
-		origAcc.setModificationUser("admin");
+		if (currentUsername!=null) {origAcc.setModificationUser(currentUsername);}else {origAcc.setModificationUser("admin");};
 		accountRepository.save(origAcc);
 		
 		
@@ -183,9 +210,9 @@ public class TransactionServiceImplementation implements TransactionService{
 			destAcc.setAccountCurrentBalance( (float)(destAcc.getAccountBalance()-0.004*destAcc.getAccountBalance()) );}
 		else {
 			destAcc.setAccountCurrentBalance( destAcc.getAccountBalance() );};
-		//Actualizamos las modificaciones en la cuenta de origen
+		//Actualizamos las modificaciones en la cuenta destino
 		destAcc.setModificationDate(LocalDateTime.now());
-		destAcc.setModificationUser("admin");
+		if (currentUsername!=null) {destAcc.setModificationUser(currentUsername);}else {destAcc.setModificationUser("admin");};
 		accountRepository.save(destAcc);
 
 		///////////////////////////////////////////////////////////////////////////

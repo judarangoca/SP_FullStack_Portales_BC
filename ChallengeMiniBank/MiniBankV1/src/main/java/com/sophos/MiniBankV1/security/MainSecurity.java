@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.sophos.MiniBankV1.security.jwt.JwtEntryPoint;
@@ -21,7 +22,7 @@ import com.sophos.MiniBankV1.security.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MainSecurity extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
@@ -39,26 +40,30 @@ public class MainSecurity extends WebSecurityConfigurerAdapter{
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
+//	@Bean
+//	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+//		
+//		http.cors().and().csrf().disable()
+//		.authorizeRequests()
+//		.antMatchers("/auth/**").permitAll()
+//		.anyRequest().authenticated()
+//		.and()
+//		.exceptionHandling().authenticationEntryPoint(jwtEntryPoint)
+//		.and()
+//		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//	
+//		http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+//		return http.build();
+//		
+//	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// TODO Auto-generated method stub
 		auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
 	}
-
-	@Bean
-	@Override
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		// TODO Auto-generated method stub
-		return super.authenticationManagerBean();
-	}
-
-	@Override
-	protected AuthenticationManager authenticationManager() throws Exception {
-		// TODO Auto-generated method stub
-		return super.authenticationManager();
-	}
-
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable()
@@ -73,6 +78,18 @@ public class MainSecurity extends WebSecurityConfigurerAdapter{
 		http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 	
-	
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		// TODO Auto-generated method stub
+		return super.authenticationManagerBean();
+	}
+
+	@Override
+	protected AuthenticationManager authenticationManager() throws Exception {
+		// TODO Auto-generated method stub
+		return super.authenticationManager();
+	}
+
 
 }
