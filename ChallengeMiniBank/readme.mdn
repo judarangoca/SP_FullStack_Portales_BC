@@ -1,1 +1,18 @@
+Important pages and tutorials
+
+Spring Boot + MySQL tutorial:
+https://www.youtube.com/playlist?list=PL-A7l3GTDnp1YkBwslsdzuJKF55cISdSD
+
+JWT Tutorial with angular and spring-boot:
+https://www.youtube.com/playlist?list=PL4bT56Uw3S4z9rtwwGvuk1Mjhu5sdLSwX
+
+
+
+Other sources:
+- For web context holder:
+https://gist.github.com/kamlesh0606/7d2e079512865d195d64
+https://github.com/spring-projects/spring-framework/blob/main/spring-web/src/main/java/org/springframework/web/context/request/RequestContextHolder.java#L99-L140
+
+-For Jwt Utils (Jwt providers):
+https://github.com/koushikkothagal/spring-security-jwt/blob/master/src/main/java/io/javabrains/springsecurityjwt/util/JwtUtil.java
 
