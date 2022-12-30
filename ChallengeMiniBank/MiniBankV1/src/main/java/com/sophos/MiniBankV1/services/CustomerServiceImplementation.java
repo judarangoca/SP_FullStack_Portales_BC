@@ -72,13 +72,13 @@ public class CustomerServiceImplementation implements CustomerService{
 	@Override
 	public boolean deleteCustomerById(int id) {
 		
-		//Verificamos que el cliente no tenga ninguna cuenta en estado cancelada!
+		//Verifying all accounts are canceled
 		ArrayList<Account> accounts = accountRepository.findByCustomerID(Integer.toString(id));
 		boolean b = true;
 		for (Account acc : accounts) {
-			if(acc.getAccountStatus().equals("Canceled")) {
+			if(!acc.getAccountStatus().equals("Canceled")) {
 				b=!b;
-				throw new RejectedExecutionException("The customer owns an account in status canceled");}
+				throw new RejectedExecutionException("The customer owns accounts not canceled");}
 		};
 		
 		if(b){
