@@ -66,11 +66,7 @@ public class AccountServiceImplementation implements AccountService{
 			newAccountNumber=GenerateNewAccountNumber(account.getAccountType());	
 			validateAccountNumber = ValidateNewAccountNumber(newAccountNumber);} //cuando validateAccountNumber=true rompe el ciclo
 		
-		//Validating typeOfAccount matchs "Ah" or "Co"
-		if( !account.getTypeOfAccount.equalsIgnoreCase("Ah") || !account.getTypeOfAccount.equalsIgnoreCase("Co") ){
-			throw new RejectedExecutionException("The account should be an Ac account or a Co account");}
-		
-		//Validating customerId exists in the DB.		
+		//validamos que el IdCliente si este registrado en la BD.		
 		Optional<Customer> customerAssociated = customerRepository.findById(account.getCustomerId()); //Obtenemos el Customer asociado
 		if (customerAssociated.isEmpty()) {
 			throw new NoSuchElementException("The customer Id is not fund");}			

@@ -178,7 +178,7 @@ public class TransactionServiceImplementation implements TransactionService{
 			throw new RejectedExecutionException("Incorrect Value for Transaction");};
 		
 		//Validamos que la cuenta de origen no se encuentre inactiva
-		if (!origAcc.getAccountStatus().equalsIgnoreCase("Activa")) {
+		if (!origAcc.getAccountStatus().equalsIgnoreCase("Active")) {
 			throw new RejectedExecutionException("The origin account is in a %s status".formatted(origAcc.getAccountStatus()));}
 			
 		//validamos que los balances de la cuenta de origen cumplan con los requisitos
